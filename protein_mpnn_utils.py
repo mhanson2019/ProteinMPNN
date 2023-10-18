@@ -200,9 +200,22 @@ def tied_featurize(batch, device, chain_dict, fixed_position_dict=None, omit_AA_
         X = np.zeros([B, L_max, 4, 3])
     residue_idx = -100*np.ones([B, L_max], dtype=np.int32)
     chain_M = np.zeros([B, L_max], dtype=np.int32) #1.0 for the bits that need to be predicted
-    pssm_coef_all = np.zeros([B, L_max], dtype=np.float32) #1.0 for the bits that need to be predicted
-    pssm_bias_all = np.zeros([B, L_max, 21], dtype=np.float32) #1.0 for the bits that need to be predicted
-    pssm_log_odds_all = 10000.0*np.ones([B, L_max, 21], dtype=np.float32) #1.0 for the bits that need to be predicted
+    if pssm_dict == None: 
+        pssm_coef_all = np.zeros([B, L_max], dtype=np.float32) #1.0 for the bits that need to be predicted
+        pssm_bias_all = np.zeros([B, L_max, 21], dtype=np.float32) #1.0 for the bits that need to be predicted
+        pssm_log_odds_all = 10000.0*np.ones([B, L_max, 21], dtype=np.float32) #1.0 for the bits that need to be predicted
+    else:
+        pssm_coef_all = np.zeros([B, L_max], dtype=np.float32) #1.0 for the bits that need to be predicted
+        pssm_bias_all = np.zeros([B, L_max, 21], dtype=np.float32) #1.0 for the bits that need to be predicted
+        pssm_log_odds_all = 10000.0*np.ones([B, L_max, 21], dtype=np.float32) #1.0 for the bits that need to be predicted
+        ### this block may not be needed after all
+        #pssm_coef_all = np.hstack((np.array(pssm_dict['A']['pssm_coef'], dtype=np.float32),
+        #                          np.array(pssm_dict['B']['pssm_coef'], dtype=np.float32)))
+        #pssm_bias_all = np.vstack((np.array(pssm_dict['A']['pssm_bias'], dtype=np.float32),
+        #                           np.array(pssm_dict['B']['pssm_bias'], dtype=np.float32)))
+        #pssm_log_odds_all = np.vstack((np.array(pssm_dict['A']['pssm_log_odds'], dtype=np.float32),
+        #                               np.array(pssm_dict['B']['pssm_log_odds'], dtype=np.float32)))
+        
     chain_M_pos = np.zeros([B, L_max], dtype=np.int32) #1.0 for the bits that need to be predicted
     bias_by_res_all = np.zeros([B, L_max, 21], dtype=np.float32)
     chain_encoding_all = np.zeros([B, L_max], dtype=np.int32) #1.0 for the bits that need to be predicted
